@@ -1,0 +1,48 @@
+from csv import DictReader, DictWriter
+from os.path import exists
+
+def getInfo():
+    firstName = 'Ivan'
+    secondName = 'Ivanov'
+    phoneNumber = 89281558366
+    return [firstName, secondName, phoneNumber]
+
+def createFile(fileName):
+    with open(fileName, 'w', encoding='utf-8') as data:
+        f_w = DictWriter(data, fieldnames=['firstName', 'secondName', 'phoneNumber'])
+        f_w.writeheader()
+
+def writeFile(fileName):
+    res = readFile(fileName)
+    userData = getInfo()
+    newObject = {'firstName': userData[0], 'secondName': userData[1], 'phoneNumber': userData[2]}
+    res.append(newObject)
+    with open(fileName, 'w', encoding='utf-8') as data:
+        f_w = DictWriter(data, fieldnames=['firstName', 'secondName', 'phoneNumber'])
+        f_w.writeheader()
+        f_w.writerows(res)
+
+def readFile(fileName):
+    with open(fileName, encoding='utf-8') as data:
+        f_r = DictReader(data)
+        return list(f_r)
+
+fileName = 'phone.csv'
+
+def main():
+    while True:
+        command = input('Введите команду: ')
+        if command == 'q':
+            break
+        elif command == 'w':
+            if not exists(fileName):
+                print('Файл отсутствует. Создайте файл')
+                createFile(fileName)
+            writeFile(fileName)
+        elif command == 'r':
+            if not exists(fileName):
+                print('Файл отсутствует. Создайте файл')
+            else:
+                print(*readFile(fileName))
+
+main()
